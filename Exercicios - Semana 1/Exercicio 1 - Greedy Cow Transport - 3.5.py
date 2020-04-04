@@ -27,20 +27,20 @@ def greedy_cow_transport(cows, totalWeight):
     listaViagem = []
     
     while len(dicionario_viagem) < len(cows):
-        copias_cow = {k: v for k, v in sorted(cows.items(), key=lambda item: item[1],reverse=True)}
+        copias_cow = sorted(cows.items(), key=lambda c: -c[1])
+        
         pesoViagem = totalWeight
         listaViagem = []
-        for key, value in copias_cow.items():
-            if key not in dicionario_viagem and value <= pesoViagem:
-                listaViagem.append(key)
-                pesoViagem = pesoViagem - value
-                dicionario_viagem[key] = value
         
-        # print(listaViagem)
+        for vaca in copias_cow:
+            if vaca[0] not in dicionario_viagem and vaca[1] <= pesoViagem:
+                listaViagem.append(vaca[0])
+                pesoViagem = pesoViagem - vaca[1]
+                dicionario_viagem[vaca[0]] = vaca[1] 
+        
         viagens.append(listaViagem)
+        
     return viagens
-
-# greedy_cow_transport(cows,totalWeight)
     
 print(greedy_cow_transport({'Lotus': 10, 'Muscles': 65, 'Clover': 5, 'Patches': 60, 'Milkshake': 75, 'Miss Bella': 15, 'Horns': 50, 'Louis': 45, 'MooMoo': 85, 'Polaris': 20}, 100))
 print(greedy_cow_transport({'Betsy': 65, 'Willow': 35, 'Abby': 38, 'Buttercup': 72, 'Dottie': 85, 'Daisy': 50, 'Patches': 12, 'Rose': 50, 'Coco': 10, 'Lilly': 24}, 100))
