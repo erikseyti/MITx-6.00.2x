@@ -17,7 +17,7 @@ cows = {"Jesse": 6, "Maybel": 3, "Callie": 2, "Maggie": 5}
 totalWeight = 10
 
 
-def greedy_cow_transport(cows, totalWeight):
+def greedy_cow_transport(cows, limit):
     
     # indica se uma das vacas já foi selecionada para fazer o transporte
     dicionario_viagem = {}
@@ -28,7 +28,7 @@ def greedy_cow_transport(cows, totalWeight):
     
     while len(dicionario_viagem) < len(cows):
         copias_cow = {k: v for k, v in sorted(cows.items(), key=lambda item: item[1],reverse=True)}
-        pesoViagem = totalWeight
+        pesoViagem = limit
         listaViagem = []
         for key, value in copias_cow.items():
             if key not in dicionario_viagem and value <= pesoViagem:
