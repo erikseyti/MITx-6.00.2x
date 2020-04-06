@@ -55,7 +55,28 @@ def greedy_cow_transport(cows,limit=10):
     trips
     """
     # TODO: Your code here
-    pass
+    # indica se uma das vacas já foi selecionada para fazer o transporte
+    dicionario_viagem = {}
+    # indica a ordem de viagem entre as vacas, e a quantidade de viagens, pelo numero de listas dentro dela
+    viagens = []
+    # indica o nome das vacas que serão transportada em uma viagem.
+    listaViagem = []
+    
+    while len(dicionario_viagem) < len(cows):
+        copias_cow = sorted(cows.items(), key=lambda c: -c[1])
+        
+        pesoViagem = limit
+        listaViagem = []
+        
+        for vaca in copias_cow:
+            if vaca[0] not in dicionario_viagem and vaca[1] <= pesoViagem:
+                listaViagem.append(vaca[0])
+                pesoViagem = pesoViagem - vaca[1]
+                dicionario_viagem[vaca[0]] = vaca[1] 
+        
+        viagens.append(listaViagem)
+        
+    return viagens
 
 
 # Problem 2
@@ -87,32 +108,27 @@ def brute_force_cow_transport(cows,limit=10):
     listaViagens = []
     listaViagensDisponiveis = []
     
-    for value in cows.values():
-        listaCows.append(value)
-    
+    for key in cows.keys():
+        listaCows.append(key)
+
+            
     for partition in get_partitions(listaCows):
         listaViagens.append(partition)
         
         for viagem in partition:
-            
-            if sum(viagem) > limit:
-                listaViagensExcluidas.append(partition)
-                break
-        
+            pesoMaximo = 0
+            for vaca in viagem:
+                pesoMaximo = pesoMaximo + copia_cows.get(vaca)
+                
+                if pesoMaximo > limit:
+                    listaViagensExcluidas.append(partition)
+                    break
+
     for viagem in listaViagens:
         if viagem not in listaViagensExcluidas:
             listaViagensDisponiveis.append(viagem)
             
     viagensOrdenadas = sorted(listaViagensDisponiveis, key=len)
-    # print(viagensOrdenadas)
-    
-    for name, value in copia_cows.items():
-        for listaVaca in viagensOrdenadas[0]:
-            contador = 0
-            for i in listaVaca:
-                if value == i:
-                   listaVaca[contador] = name
-                contador = contador +1
     
     return viagensOrdenadas[0]
     
@@ -148,8 +164,8 @@ limit=10
 # print(cows)
 
 # print(greedy_cow_transport(cows, limit))
-# print(brute_force_cow_transport(cows, limit))
+print(brute_force_cow_transport(cows, limit))
 
-print(brute_force_cow_transport({'Boo': 20, 'Lotus': 40, 'Miss Bella': 25, 'Milkshake': 40, 'MooMoo': 50, 'Horns': 25}, 100))
+# print(brute_force_cow_transport({'Boo': 20, 'Lotus': 40, 'Miss Bella': 25, 'Milkshake': 40, 'MooMoo': 50, 'Horns': 25}, 100))
 
 
