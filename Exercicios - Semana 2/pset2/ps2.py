@@ -283,13 +283,13 @@ class StandardRobot(Robot):
         else:
             self.setRobotDirection(random.randrange(0,360))
         
-        
         # raise NotImplementedError
 
 
 # Uncomment this line to see your implementation of StandardRobot in action!
-testRobotMovement(StandardRobot, RectangularRoom)
+# testRobotMovement(StandardRobot, RectangularRoom)
 
+random.seed(0)
 
 # === Problem 4
 def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
@@ -310,11 +310,45 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     robot_type: class of robot to be instantiated (e.g. StandardRobot or
                 RandomWalkRobot)
     """
-    raise NotImplementedError
+    
+    media_passos = []
+    
+    for n in range(num_trials):
+        # metodo para debug
+        # anim = ps2_visualize.RobotVisualization(num_robots, width, height,delay=0.7)
+        
+        room = RectangularRoom(width, height)
+        
+        robots = [robot_type(room, speed) for j in range(num_robots)]
+        porcentagemSala = False
+        numSteps = 1
+        
+        while porcentagemSala == False:
+            # anim.update(room, robots)
+            for robot in robots:                
+                robot.updatePositionAndClean()
+                lajotasLimpas = robot.room.getNumCleanedTiles()
+                lajotasTotal = robot.room.getNumTiles()
+                if lajotasLimpas >= lajotasTotal*min_coverage:
+                    media_passos.append(numSteps)
+                    porcentagemSala = True
+                    break
+            numSteps = numSteps + 1
+        # metodo para debug
+    # anim.done()
+            
+    passos_total = sum(media_passos)
+    passos_total = passos_total/num_trials
+    return passos_total
+
 
 # Uncomment this line to see how much your simulation takes on average
-##print(runSimulation(1, 1.0, 10, 10, 0.75, 30, StandardRobot))
-
+# print(runSimulation(1, 1.0, 5, 5, 1, 30, StandardRobot))
+# print(runSimulation(1, 1.0, 10, 10, 0.75, 30, StandardRobot))
+# print(runSimulation(1, 1.0, 10, 10, 0.9, 30, StandardRobot))
+# print(runSimulation(1, 1.0, 20, 20, 1, 30, StandardRobot))
+# print(runSimulation(3, 1.0, 20, 20, 1, 1, StandardRobot))
+# print(runSimulation(2, 3.0, 8, 8, 0.8, 1, StandardRobot))
 
 # === Problem 5
 class RandomWalkRobot(Robot):
@@ -329,8 +363,18 @@ class RandomWalkRobot(Robot):
         Move the robot to a new position and mark the tile it is on as having
         been cleaned.
         """
-        raise NotImplementedError
+        
+        direction = self.getRobotDirection()        
+        posicao = self.position.getNewPosition(direction,self.speed)
+        
+        if self.room.isPositionInRoom(posicao) == True:
+            self.setRobotPosition(posicao)
+            self.room.cleanTileAtPosition(posicao)
+        self.setRobotDirection(random.randrange(0,360))
+        
+        # raise NotImplementedError
 
+# print(runSimulation(3, 1.0, 8, 8, 0.8, 1, RandomWalkRobot))
 
 def showPlot1(title, x_label, y_label):
     """
@@ -359,12 +403,22 @@ def showPlot2(title, x_label, y_label):
     aspect_ratios = []
     times1 = []
     times2 = []
-    for width in [10, 20, 25, 50]:
+    for width in [10, 20, 25, 35,50]:
         height = 300//width
+        
+        # print(width)
+        # print(height)
+        
         print("Plotting cleaning time for a room of width:", width, "by height:", height)
         aspect_ratios.append(float(width) / height)
+        
+        print(aspect_ratios)
+        
         times1.append(runSimulation(2, 1.0, width, height, 0.8, 200, StandardRobot))
         times2.append(runSimulation(2, 1.0, width, height, 0.8, 200, RandomWalkRobot))
+    print(times1)
+    print(times2)
+    
     pylab.plot(aspect_ratios, times1)
     pylab.plot(aspect_ratios, times2)
     pylab.title(title)
@@ -383,6 +437,8 @@ def showPlot2(title, x_label, y_label):
 #     plot.
 #
 #       (... your call here ...)
+# showPlot1("Titulo","Numero de Robos","Tempo de Execução")
+    
 #
 
 #
@@ -390,29 +446,30 @@ def showPlot2(title, x_label, y_label):
 #     plot.
 #
 #       (... your call here ...)
+showPlot2("Titulo","Aspect Ratio","Tempo de execução")
 #
 
 
         
-room = RectangularRoom(5, 9)
-print(room.getNumTiles())
-room.getNumCleanedTiles()
-room.cleanTileAtPosition(Position(5,5))
-print(room.cleanTileAtPosition(Position(7,6)))
+# room = RectangularRoom(5, 9)
+# print(room.getNumTiles())
+# room.getNumCleanedTiles()
+# room.cleanTileAtPosition(Position(5,5))
+# print(room.cleanTileAtPosition(Position(7,6)))
 
-print(room.isPositionInRoom(Position(-0.10, 0.00)))
-print(room.isPositionInRoom(Position(0.00, -0.10)))
-print(room.isPositionInRoom(Position(-0.10, -0.10)))
-print(room.isPositionInRoom(Position(4.00, 10.00)))
-print(room.isPositionInRoom(Position(6.49, 5.65)))
-print(room.isPositionInRoom(Position(4.99,8.87)))
-print(room.isPositionInRoom(Position(0.47, 9.13)))
-print(room.isPositionInRoom(Position(0,0)))
+# print(room.isPositionInRoom(Position(-0.10, 0.00)))
+# print(room.isPositionInRoom(Position(0.00, -0.10)))
+# print(room.isPositionInRoom(Position(-0.10, -0.10)))
+# print(room.isPositionInRoom(Position(4.00, 10.00)))
+# print(room.isPositionInRoom(Position(6.49, 5.65)))
+# print(room.isPositionInRoom(Position(4.99,8.87)))
+# print(room.isPositionInRoom(Position(0.47, 9.13)))
+# print(room.isPositionInRoom(Position(0,0)))
 
-print(room.isPositionInRoom(Position(5,9)))
+# print(room.isPositionInRoom(Position(5,9)))
 
-print(room.isPositionInRoom(Position(0,-0.10)))
+# print(room.isPositionInRoom(Position(0,-0.10)))
 
-print(room.isPositionInRoom(Position(0,0)))
-print(room.isPositionInRoom(Position(0,0.1)))
-print(room.isPositionInRoom(Position(0,0.10)))
+# print(room.isPositionInRoom(Position(0,0)))
+# print(room.isPositionInRoom(Position(0,0.1)))
+# print(room.isPositionInRoom(Position(0,0.10)))
