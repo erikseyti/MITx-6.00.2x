@@ -59,6 +59,7 @@ def calcularCoeficienteVariancia(lista):
 print(stdDevOfLeghts_V2(["a","z","p"]))
 print(stdDevOfLeghts_V2(['apples', 'oranges', 'kiwis', 'pineapples']))
 print(stdDevOfLeghts_V2([]))
+print(stdDevOfLeghts_V2(["0","2!"]))
 
 print(calcularCoeficienteVariancia([0,1,2,3,4,5,6]))
 print(calcularCoeficienteVariancia([10,4,12,15,20,5]))
