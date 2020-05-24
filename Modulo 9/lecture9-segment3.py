@@ -128,11 +128,14 @@ def plotDistributions():
 
 def compareDists():
     uniform, normal, exp = [], [], []
-    for i in range(100000):
+    contador = 0
+    for i in range(10000):
         uniform.append(random.random())
         normal.append(random.gauss(0, 1))
         exp.append(random.expovariate(0.5))
-    sampleSizes = range(20, 600, 1)
+        contador = contador + 1
+        print(contador)
+    sampleSizes = range(20, 1000, 1)
     udiffs = getDiffs(uniform, sampleSizes)
     ndiffs = getDiffs(normal, sampleSizes)
     ediffs = getDiffs(exp, sampleSizes)
